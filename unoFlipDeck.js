@@ -1,4 +1,4 @@
-class UnoFlipGame {
+class UnoFlipDeck {
     constructor() {
         this.deck = this.createDeck();
     }
@@ -113,6 +113,31 @@ class UnoFlipGame {
     getDeck() {
         return this.deck;
     }
+
+    drawCard(numberOfCards = 1) {
+        const cards = [];
+        for (let i = 0; i < numberOfCards; i++) {
+            if (this.deck.length === 0) {
+                this.deck = this.createDeck();
+            }
+            cards.push(this.deck.pop());
+        }
+        return cards;
+    }
+
+    drawUntilColor(color) {
+        const cards = [];
+        let card = this.deck.shift();
+        cards.push(card);
+        while (card.back.color !== color) {
+            if (this.deck.length === 0) {
+                this.deck = this.createDeck();
+            }
+            card = this.deck.shift();
+            cards.push(card);
+        }
+        return cards;
+    }
 }
 
-module.exports = UnoFlipGame;
+module.exports = UnoFlipDeck;

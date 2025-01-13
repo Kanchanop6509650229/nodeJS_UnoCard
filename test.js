@@ -1,6 +1,18 @@
 const UnoFlipDeck = require('./unoFlipDeck.js');
+const UnoField = require('./unoField.js');
 
 const deck = new UnoFlipDeck();
+const field = new UnoField(deck);
+
+deck.flipDeck();
+field.flipField();
+
+console.log(deck.isDeckFlipped());
+
+console.log("\nทดสอบการ์ดใบบนสุดในสนาม:");
+console.log(field.getTopCard(deck.isDeckFlipped()).getCurrentSide());
+
+deck.flipDeck();
 
 // ทดสอบการจั่วการ์ดใบเดียว (ด้านหน้า)
 console.log('\nทดสอบการจั่วการ์ดใบเดียว (ด้านหน้า):');

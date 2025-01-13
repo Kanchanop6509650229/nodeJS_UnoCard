@@ -153,11 +153,14 @@ class UnoFlipDeck {
         return cards;
     }
 
+    isDeckFlipped() {
+        return this.isFlipped;
+    }
+
     // Clear the deck
     clearDeck() {
         this.deck = [];
     }
-
 }
 
 module.exports = UnoFlipDeck;

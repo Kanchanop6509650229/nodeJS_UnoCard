@@ -1,6 +1,7 @@
 const UnoFlipDeck = require("./unoFlipDeck.js");
 const UnoField = require("./unoField.js");
 const UnoPlayer = require("./unoPlayer.js");
+const UnoCard = require("./unoCard.js");
 
 console.log("=== เริ่มการทดสอบระบบ UNO Flip ===\n");
 
@@ -33,28 +34,23 @@ console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentS
 console.log("การ์ดที่เล่นได้:", player1.findPlayableCards(field));
 
 // ทดสอบการเล่นไพ่ wild
-console.log("\n5. ทดสอบการเล่นไพ่ Wild");
+console.log('\n5. ทดสอบการเล่นไพ่ Wild');
+console.log('สีปัจจุบันบนสนาม:', field.getCurrentColor());
+//จำลอง wild card
+const wildCard = new UnoCard(
+    { value: "wild", color: "wild", type: "special" },
+    { value: "wild", color: "wild", type: "special" }
+  );
 // สมมติว่าผู้เล่นมีไพ่ wild
-player1.drawCard([
-  {
-    frontColor: "wild",
-    frontValue: "wild",
-    frontType: "special",
-    backColor: "wild",
-    backValue: "wild",
-    backType: "special",
-    flipped: false,
-  },
-]);
-const wildCardIndex = player1
-  .getHand()
-  .findIndex((card) => card.getColor() === "wild");
+player1.drawCard([wildCard]);
+const wildCardIndex = player1.getHand().findIndex(card => card.getColor() === 'wild');
 if (wildCardIndex !== -1) {
-  console.log("เล่นไพ่ wild");
-  player1.playCard(wildCardIndex, field);
-  field.setWildColor("red");
-  console.log("ตั้งค่าสีเป็นแดง");
-  console.log("สีปัจจุบันบนสนาม:", field.getCurrentColor());
+    console.log('เล่นไพ่ wild');
+    field.AddCard(player1.playCard(wildCardIndex, field));
+    field.setWildColor('red');
+    console.log('ตั้งค่าสีเป็นแดง');
+    console.log('สีปัจจุบันบนสนาม:', field.getCurrentColor());
+    console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentSide());
 }
 
 // ทดสอบการพลิกด้าน

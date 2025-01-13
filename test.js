@@ -26,11 +26,6 @@ console.log("Player 1 card count:", player1.getHandCardCount());
 // ทดสอบการเรียก UNO
 console.log("\n3. ทดสอบการเรียก UNO");
 console.log("เรียก UNO ตอนมีไพ่ 7 ใบ:", player1.callUno());
-// สมมติว่าเหลือไพ่ 2 ใบ
-while (player1.getHandCardCount() > 2) {
-  player1.playCard(0, field); // เล่นไพ่ไปเรื่อยๆจนเหลือ 2 ใบ
-}
-console.log("เรียก UNO ตอนมีไพ่ 2 ใบ:", player1.callUno());
 
 // ทดสอบการเล่นไพ่
 console.log("\n4. ทดสอบการเล่นไพ่");

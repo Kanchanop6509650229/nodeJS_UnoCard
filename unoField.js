@@ -39,7 +39,7 @@ class Field {
 
   getCurrentColor() {
     // ถ้ามีการตั้งค่าสี wild card ให้ใช้สีนั้น
-    if (this.getTopCard().getColor() === "wild" && this.currentWildColor) {
+    if (this.getTopCard().getColor() === "wild") {
       return this.currentWildColor;
     }
     return this.isFlipped

@@ -1,48 +1,95 @@
-const UnoFlipDeck = require('./unoFlipDeck.js');
-const UnoField = require('./unoField.js');
+const UnoFlipDeck = require("./unoFlipDeck.js");
+const UnoField = require("./unoField.js");
+const UnoPlayer = require("./unoPlayer.js");
 
+console.log("=== เริ่มการทดสอบระบบ UNO Flip ===\n");
+
+// สร้างอุปกรณ์การเล่น
+console.log("1. ทดสอบการสร้างเกม");
 const deck = new UnoFlipDeck();
 const field = new UnoField(deck);
+console.log("สร้างเด็คและสนามสำเร็จ");
+console.log("จำนวนการ์ดในเด็คเริ่มต้น:", deck.getCurrentDeckSize());
+console.log("การ์ดบนสนามใบแรก:", field.getTopCard().getCurrentSide());
 
+// สร้างผู้เล่นและแจกไพ่
+console.log("\n2. ทดสอบการสร้างผู้เล่นและแจกไพ่");
+const player1 = new UnoPlayer("Player 1", deck.drawCard(7));
+const player2 = new UnoPlayer("Player 2", deck.drawCard(7));
+
+console.log("Player 1 cards:");
+player1.getHand().forEach((card, i) => {
+  console.log(`Card ${i + 1}:`, card.getCurrentSide());
+});
+console.log("Player 1 card count:", player1.getHandCardCount());
+
+// ทดสอบการเรียก UNO
+console.log("\n3. ทดสอบการเรียก UNO");
+console.log("เรียก UNO ตอนมีไพ่ 7 ใบ:", player1.callUno());
+// สมมติว่าเหลือไพ่ 2 ใบ
+while (player1.getHandCardCount() > 2) {
+  player1.playCard(0, field); // เล่นไพ่ไปเรื่อยๆจนเหลือ 2 ใบ
+}
+console.log("เรียก UNO ตอนมีไพ่ 2 ใบ:", player1.callUno());
+
+// ทดสอบการเล่นไพ่
+console.log("\n4. ทดสอบการเล่นไพ่");
+console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentSide());
+console.log("การ์ดที่เล่นได้:", player1.findPlayableCards(field));
+
+// ทดสอบการเล่นไพ่ wild
+console.log("\n5. ทดสอบการเล่นไพ่ Wild");
+// สมมติว่าผู้เล่นมีไพ่ wild
+player1.drawCard([
+  {
+    frontColor: "wild",
+    frontValue: "wild",
+    frontType: "special",
+    backColor: "wild",
+    backValue: "wild",
+    backType: "special",
+    flipped: false,
+  },
+]);
+const wildCardIndex = player1
+  .getHand()
+  .findIndex((card) => card.getColor() === "wild");
+if (wildCardIndex !== -1) {
+  console.log("เล่นไพ่ wild");
+  player1.playCard(wildCardIndex, field);
+  field.setWildColor("red");
+  console.log("ตั้งค่าสีเป็นแดง");
+  console.log("สีปัจจุบันบนสนาม:", field.getCurrentColor());
+}
+
+// ทดสอบการพลิกด้าน
+console.log("\n6. ทดสอบการพลิกด้าน");
+console.log("สถานะก่อนพลิก:", deck.isDeckFlipped());
 deck.flipDeck();
 field.flipField();
+console.log("สถานะหลังพลิก:", deck.isDeckFlipped());
+console.log("การ์ดบนสนามหลังพลิก:", field.getTopCard().getCurrentSide());
 
-console.log(deck.isDeckFlipped());
+// ทดสอบการจั่วจนเจอสีที่ต้องการ
+console.log("\n7. ทดสอบการจั่วจนเจอสีที่ต้องการ");
+const drawnCards = deck.drawUntilColor("teal");
+console.log("จำนวนการ์ดที่จั่วจนเจอสี teal:", drawnCards.length);
+console.log(
+  "การ์ดสุดท้ายที่จั่วได้:",
+  drawnCards[drawnCards.length - 1].getCurrentSide()
+);
 
-console.log("\nทดสอบการ์ดใบบนสุดในสนาม:");
-console.log(field.getTopCard(deck.isDeckFlipped()).getCurrentSide());
+// ทดสอบการเล่นไพ่พิเศษ
+console.log("\n8. ทดสอบการเล่นไพ่พิเศษ");
+console.log("ทิศทางปัจจุบัน:", field.getDirection());
+field.reverseDirection();
+console.log("ทิศทางหลังใช้ไพ่ reverse:", field.getDirection());
 
-deck.flipDeck();
+// ทดสอบการสร้างเด็คใหม่เมื่อการ์ดหมด
+console.log("\n9. ทดสอบการสร้างเด็คใหม่");
+const originalSize = deck.getCurrentDeckSize();
+deck.clearDeck();
+const newCard = deck.drawCard();
+console.log("สามารถจั่วไพ่หลังสร้างเด็คใหม่:", newCard[0].getCurrentSide());
 
-// ทดสอบการจั่วการ์ดใบเดียว (ด้านหน้า)
-console.log('\nทดสอบการจั่วการ์ดใบเดียว (ด้านหน้า):');
-const [singleCard] = deck.drawCard();
-console.log('ด้านหน้า:', singleCard.getCurrentSide());
-
-// ทดสอบการจั่วการ์ดหลายใบ (ด้านหน้า)
-console.log('\nทดสอบการจั่วการ์ดหลายใบ (ด้านหน้า):');
-const multipleCards = deck.drawCard(4);
-console.log('จั่วการ์ด 4 ใบ:');
-multipleCards.forEach((card, index) => {
-    console.log(`การ์ดที่ ${index + 1}:`, card.getCurrentSide());
-});
-
-// พลิกการ์ดในเด็ค
-console.log('\nพลิกการ์ดในเด็คไปด้านหลัง');
-deck.flipDeck();
-
-// ทดสอบการจั่วการ์ดหลังจากพลิก
-console.log('\nทดสอบการจั่วการ์ดหลังจากพลิก:');
-const flippedCards = deck.drawCard(2);
-console.log('จั่วการ์ด 2 ใบ:');
-flippedCards.forEach((card, index) => {
-    console.log(`การ์ดที่ ${index + 1}:`, card.getCurrentSide());
-});
-
-// ทดสอบการจั่วการ์ดจนกว่าจะเจอสีที่ต้องการ (ต้องเป็นด้านหลัง)
-console.log('\nทดสอบการจั่วการ์ดจนกว่าจะเจอสีฟ้าเขียว:');
-const cardsUntilTeal = deck.drawUntilColor('teal');
-console.log(`จั่วการ์ด ${cardsUntilTeal.length} ใบจนกว่าจะเจอสีฟ้าเขียว:`);
-cardsUntilTeal.forEach((card, index) => {
-    console.log(`การ์ดที่ ${index + 1}:`, card.getCurrentSide());
-});
+console.log("\n=== จบการทดสอบ ===");

@@ -1,7 +1,8 @@
-const UnoFlipDeck = require("./unoFlipDeck.js");
-const UnoField = require("./unoField.js");
-const UnoPlayer = require("./unoPlayer.js");
-const UnoCard = require("./unoCard.js");
+const UnoFlipDeck = require("./unoClass/unoFlipDeck.js");
+const UnoField = require("./unoClass/unoField.js");
+const UnoPlayer = require("./unoClass/unoPlayer.js");
+const UnoCard = require("./unoClass/unoCard.js");
+const UnoGameState = require("./unoClass/unoGameState.js");
 
 console.log("=== เริ่มการทดสอบระบบ UNO Flip ===\n");
 
@@ -9,6 +10,7 @@ console.log("=== เริ่มการทดสอบระบบ UNO Flip ==
 console.log("1. ทดสอบการสร้างเกม");
 const deck = new UnoFlipDeck();
 const field = new UnoField(deck);
+const state = new UnoGameState(deck, field);
 console.log("สร้างเด็คและสนามสำเร็จ");
 console.log("จำนวนการ์ดในเด็คเริ่มต้น:", deck.getCurrentDeckSize());
 console.log("การ์ดบนสนามใบแรก:", field.getTopCard().getCurrentSide());
@@ -82,5 +84,20 @@ const originalSize = deck.getCurrentDeckSize();
 deck.clearDeck();
 const newCard = deck.drawCard();
 console.log("สามารถจั่วไพ่หลังสร้างเด็คใหม่:", newCard[0].getCurrentSide());
+
+console.log("\n10. ทดสอบการเพิ่มและลบผู้เล่น");
+state.addPlayer(player1);
+state.addPlayer(player2);
+state.getPlayers().forEach((player, i) => {
+  console.log(`Player ${i + 1}:`, player.name);
+});
+state.removePlayer(player2);
+state.getPlayers().forEach((player, i) => {
+  console.log(`Player ${i + 1}:`, player.name);
+})
+state.addPlayer(player2);
+
+console.log("\n11. ทดสอบผู้เล่นคนปัจจุบัน");
+console.log("ผู้เล่นปัจจุบัน :" + state.getCurrentPlayer().name);
 
 console.log("\n=== จบการทดสอบ ===");

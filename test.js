@@ -19,6 +19,7 @@ console.log("การ์ดบนสนามใบแรก:", field.getTopCar
 console.log("\n2. ทดสอบการสร้างผู้เล่นและแจกไพ่");
 const player1 = new UnoPlayer("Player 1", deck.drawCard(7));
 const player2 = new UnoPlayer("Player 2", deck.drawCard(7));
+console.log("จำนวนการ์ดคงเหลือในเด็ค:", deck.getCurrentDeckSize());
 
 console.log("Player 1 cards:");
 player1.getHand().forEach((card, i) => {
@@ -42,17 +43,22 @@ console.log('สีปัจจุบันบนสนาม:', field.getCurren
 const wildCard = new UnoCard(
     { value: "wild", color: "wild", type: "special" },
     { value: "wild", color: "wild", type: "special" }
-  );
+);
 // สมมติว่าผู้เล่นมีไพ่ wild
-player1.drawCard([wildCard]);
-const wildCardIndex = player1.getHand().findIndex(card => card.getColor() === 'wild');
-if (wildCardIndex !== -1) {
-    console.log('เล่นไพ่ wild');
-    field.AddCard(player1.playCard(wildCardIndex, field));
-    field.setWildColor('red');
-    console.log('ตั้งค่าสีเป็นแดง');
-    console.log('สีปัจจุบันบนสนาม:', field.getCurrentColor());
-    console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentSide());
+try {
+    player1.drawCard([wildCard]);
+    const wildCardIndex = player1.getHand().findIndex(card => card.getColor() === 'wild');
+    if (wildCardIndex !== -1) {
+        console.log('เล่นไพ่ wild');
+        const playedCard = player1.playCard(wildCardIndex, field);
+        field.addCard(playedCard);
+        field.setWildColor('red');
+        console.log('ตั้งค่าสีเป็นแดง');
+        console.log('สีปัจจุบันบนสนาม:', field.getCurrentColor());
+        console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentSide());
+    }
+} catch (error) {
+    console.error('Error playing wild card:', error.message);
 }
 
 // ทดสอบการพลิกด้าน
@@ -75,8 +81,12 @@ console.log(
 // ทดสอบการเล่นไพ่พิเศษ
 console.log("\n8. ทดสอบการเล่นไพ่พิเศษ");
 console.log("ทิศทางปัจจุบัน:", field.getDirection());
-field.reverseDirection();
-console.log("ทิศทางหลังใช้ไพ่ reverse:", field.getDirection());
+try {
+    field.reverseDirection();
+    console.log("ทิศทางหลังใช้ไพ่ reverse:", field.getDirection());
+} catch (error) {
+    console.error('Error reversing direction:', error.message);
+}
 
 // ทดสอบการสร้างเด็คใหม่เมื่อการ์ดหมด
 console.log("\n9. ทดสอบการสร้างเด็คใหม่");

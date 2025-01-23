@@ -56,6 +56,26 @@ try {
         console.log('ตั้งค่าสีเป็นแดง');
         console.log('สีปัจจุบันบนสนาม:', field.getCurrentColor());
         console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentSide());
+        
+        // ทดลองการเล่นการ์ดที่มีสีตาม wild color
+        const redCard = new UnoCard(
+            { value: 5, color: "red", type: "number" },
+            { value: 5, color: "pink", type: "number" }
+        );
+        player1.drawCard([redCard]);
+        const redCardIndex = player1.getHand().length - 1;
+        console.log('\nทดสอบเล่นไพ่สีแดงที่ตรงกับ wild color:');
+        console.log('สามารถเล่นไพ่สีแดงได้:', player1.canPlay(redCardIndex, field));
+        
+        // ทดลองการเล่นการ์ดที่มีสีตามตัวเลขก่อนหน้า
+        const sameValueCard = new UnoCard(
+            { value: field.getCurrentValue(), color: "blue", type: "number" },
+            { value: field.getCurrentValue(), color: "teal", type: "number" }
+        );
+        player1.drawCard([sameValueCard]);
+        const valueCardIndex = player1.getHand().length - 1;
+        console.log('\nทดสอบเล่นไพ่ที่มีค่าเท่ากับการ์ดก่อนหน้า:');
+        console.log('สามารถเล่นไพ่ที่มีค่าเท่ากันได้:', player1.canPlay(valueCardIndex, field));
     }
 } catch (error) {
     console.error('Error playing wild card:', error.message);

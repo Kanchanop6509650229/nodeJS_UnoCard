@@ -104,7 +104,9 @@ class Player {
 
     return (
       card.getColor() === field.getCurrentColor() ||
-      card.getValue() === field.getCurrentValue()
+      card.getValue() === field.getCurrentValue() ||
+      (field.currentWildColor && card.getColor() === field.currentWildColor) ||
+      (field.previousCardValue && card.getValue() === field.previousCardValue)
     );
   }
 

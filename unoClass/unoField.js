@@ -16,6 +16,7 @@ class Field {
     this.currentWildColor = null;
     this.direction = 1; // 1 = clockwise, -1 = counter-clockwise
     this.isFlipped = false;
+    this.previousCardValue = null;
 
     this.#initializeFirstCard(deck);
   }

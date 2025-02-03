@@ -3,23 +3,26 @@ const UnoField = require("./unoClass/unoField.js");
 const UnoPlayer = require("./unoClass/unoPlayer.js");
 const UnoCard = require("./unoClass/unoCard.js");
 const UnoGameState = require("./unoClass/unoGameState.js");
+const Bot = require("./unoClass/unoBot.js");
+const GameManager = require("./unoClass/unoGameManager.js");
+const GameAction = require("./unoClass/unoGameAction.js");
 
-console.log("=== เริ่มการทดสอบระบบ UNO Flip ===\n");
+console.log("=== Starting UNO Flip System Tests ===\n");
 
-// สร้างอุปกรณ์การเล่น
-console.log("1. ทดสอบการสร้างเกม");
+// Create game components
+console.log("1. Testing game creation");
 const deck = new UnoFlipDeck();
 const field = new UnoField(deck);
 const state = new UnoGameState(deck, field);
-console.log("สร้างเด็คและสนามสำเร็จ");
-console.log("จำนวนการ์ดในเด็คเริ่มต้น:", deck.getCurrentDeckSize());
-console.log("การ์ดบนสนามใบแรก:", field.getTopCard().getCurrentSide());
+console.log("Deck and field created successfully");
+console.log("Initial deck size:", deck.getCurrentDeckSize());
+console.log("Top card on field:", field.getTopCard().getCurrentSide());
 
-// สร้างผู้เล่นและแจกไพ่
-console.log("\n2. ทดสอบการสร้างผู้เล่นและแจกไพ่");
+// Create players and deal cards
+console.log("\n2. Testing player creation and card dealing");
 const player1 = new UnoPlayer("Player 1", deck.drawCard(7));
 const player2 = new UnoPlayer("Player 2", deck.drawCard(7));
-console.log("จำนวนการ์ดคงเหลือในเด็ค:", deck.getCurrentDeckSize());
+console.log("Remaining cards in deck:", deck.getCurrentDeckSize());
 
 console.log("Player 1 cards:");
 player1.getHand().forEach((card, i) => {
@@ -27,95 +30,94 @@ player1.getHand().forEach((card, i) => {
 });
 console.log("Player 1 card count:", player1.getHandCardCount());
 
-// ทดสอบการเรียก UNO
-console.log("\n3. ทดสอบการเรียก UNO");
-console.log("เรียก UNO ตอนมีไพ่ 7 ใบ:", player1.callUno());
+// Test UNO call
+console.log("\n3. Testing UNO call");
+console.log("Call UNO with 7 cards:", player1.callUno());
 
-// ทดสอบการเล่นไพ่
-console.log("\n4. ทดสอบการเล่นไพ่");
-console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentSide());
-console.log("การ์ดที่เล่นได้:", player1.findPlayableCards(field));
+// Test card playing
+console.log("\n4. Testing card play");
+console.log("Top card on field:", field.getTopCard().getCurrentSide());
+console.log("Playable cards:", player1.findPlayableCards(field));
 
-// ทดสอบการเล่นไพ่ wild
-console.log('\n5. ทดสอบการเล่นไพ่ Wild');
-console.log('สีปัจจุบันบนสนาม:', field.getCurrentColor());
-//จำลอง wild card
+// Test wild card play
+console.log('\n5. Testing Wild card play');
+console.log('Current field color:', field.getCurrentColor());
+// Simulate wild card
 const wildCard = new UnoCard(
     { value: "wild", color: "wild", type: "special" },
     { value: "wild", color: "wild", type: "special" }
 );
-// สมมติว่าผู้เล่นมีไพ่ wild
+// Assume player has wild card
 try {
     player1.drawCard([wildCard]);
     const wildCardIndex = player1.getHand().findIndex(card => card.getColor() === 'wild');
     if (wildCardIndex !== -1) {
-        console.log('เล่นไพ่ wild');
+        console.log('Playing wild card');
         const playedCard = player1.playCard(wildCardIndex, field);
         field.addCard(playedCard);
         field.setWildColor('red');
-        console.log('ตั้งค่าสีเป็นแดง');
-        console.log('สีปัจจุบันบนสนาม:', field.getCurrentColor());
-        console.log("การ์ดบนสนาม:", field.getTopCard().getCurrentSide());
+        console.log('Set color to red');
+        console.log('Current field color:', field.getCurrentColor());
+        console.log("New top card on field:", field.getTopCard().getCurrentSide());
         
-        // ทดลองการเล่นการ์ดที่มีสีตาม wild color
+        // Test playing card matching wild color
         const redCard = new UnoCard(
             { value: 5, color: "red", type: "number" },
             { value: 5, color: "pink", type: "number" }
         );
         player1.drawCard([redCard]);
         const redCardIndex = player1.getHand().length - 1;
-        console.log('\nทดสอบเล่นไพ่สีแดงที่ตรงกับ wild color:');
-        console.log('สามารถเล่นไพ่สีแดงได้:', player1.canPlay(redCardIndex, field));
+        console.log('\nTest playing red card matching wild color:');
+        console.log('Can play red card:', player1.canPlay(redCardIndex, field));
         
-        // ทดลองการเล่นการ์ดที่มีสีตามตัวเลขก่อนหน้า
+        // Test playing card matching previous value
         const sameValueCard = new UnoCard(
             { value: field.getCurrentValue(), color: "blue", type: "number" },
-            { value: field.getCurrentValue(), color: "teal", type: "number" }
         );
         player1.drawCard([sameValueCard]);
         const valueCardIndex = player1.getHand().length - 1;
-        console.log('\nทดสอบเล่นไพ่ที่มีค่าเท่ากับการ์ดก่อนหน้า:');
-        console.log('สามารถเล่นไพ่ที่มีค่าเท่ากันได้:', player1.canPlay(valueCardIndex, field));
+        console.log('\nTest playing card with matching value:');
+        console.log('Can play same value card:', player1.canPlay(valueCardIndex, field));
     }
 } catch (error) {
     console.error('Error playing wild card:', error.message);
 }
 
-// ทดสอบการพลิกด้าน
-console.log("\n6. ทดสอบการพลิกด้าน");
-console.log("สถานะก่อนพลิก:", deck.isDeckFlipped());
+// Test deck flipping
+console.log("\n6. Testing deck flip");
+console.log("Pre-flip state:", deck.isDeckFlipped());
 deck.flipDeck();
 field.flipField();
-console.log("สถานะหลังพลิก:", deck.isDeckFlipped());
-console.log("การ์ดบนสนามหลังพลิก:", field.getTopCard().getCurrentSide());
+console.log("Post-flip state:", deck.isDeckFlipped());
+console.log("Top card after flip:", field.getTopCard().getCurrentSide());
 
-// ทดสอบการจั่วจนเจอสีที่ต้องการ
-console.log("\n7. ทดสอบการจั่วจนเจอสีที่ต้องการ");
+// Test drawing until color
+console.log("\n7. Testing draw until color");
 const drawnCards = deck.drawUntilColor("teal");
-console.log("จำนวนการ์ดที่จั่วจนเจอสี teal:", drawnCards.length);
+console.log("Cards drawn until teal:", drawnCards.length);
 console.log(
-  "การ์ดสุดท้ายที่จั่วได้:",
+  "Last drawn card:",
   drawnCards[drawnCards.length - 1].getCurrentSide()
 );
 
-// ทดสอบการเล่นไพ่พิเศษ
-console.log("\n8. ทดสอบการเล่นไพ่พิเศษ");
-console.log("ทิศทางปัจจุบัน:", field.getDirection());
+// Test special card effects
+console.log("\n8. Testing special cards");
+console.log("Current direction:", field.getDirection());
 try {
     field.reverseDirection();
-    console.log("ทิศทางหลังใช้ไพ่ reverse:", field.getDirection());
+    console.log("Direction after reverse:", field.getDirection());
 } catch (error) {
     console.error('Error reversing direction:', error.message);
 }
 
-// ทดสอบการสร้างเด็คใหม่เมื่อการ์ดหมด
-console.log("\n9. ทดสอบการสร้างเด็คใหม่");
+// Test deck regeneration
+console.log("\n9. Testing deck regeneration");
 const originalSize = deck.getCurrentDeckSize();
 deck.clearDeck();
 const newCard = deck.drawCard();
-console.log("สามารถจั่วไพ่หลังสร้างเด็คใหม่:", newCard[0].getCurrentSide());
+console.log("Drawn card after regeneration:", newCard[0].getCurrentSide());
 
-console.log("\n10. ทดสอบการเพิ่มและลบผู้เล่น");
+console.log("\n10. Testing player management");
 state.addPlayer(player1);
 state.addPlayer(player2);
 state.getPlayers().forEach((player, i) => {
@@ -127,7 +129,56 @@ state.getPlayers().forEach((player, i) => {
 })
 state.addPlayer(player2);
 
-console.log("\n11. ทดสอบผู้เล่นคนปัจจุบัน");
-console.log("ผู้เล่นปัจจุบัน :" + state.getCurrentPlayer().name);
+console.log("\n11. Testing current player");
+console.log("Current player:", state.getCurrentPlayer().name);
 
-console.log("\n=== จบการทดสอบ ===");
+// Test bot functionality
+console.log("\n12. Testing Bot");
+const bot = new Bot("AI Player", deck.drawCard(7));
+console.log("Bot created:", bot.name);
+console.log("Initial bot hand size:", bot.getHandCardCount());
+
+// Test bot analysis
+const analysis = bot.analyzeHand();
+console.log("Hand analysis:", analysis);
+
+// Test bot decision making
+try {
+    const cardIndex = bot.decideCard(field);
+    if (cardIndex !== null) {
+        console.log("Bot chose to play card at index:", cardIndex);
+        const playedCard = bot.playCard(cardIndex, field);
+        field.addCard(playedCard);
+        console.log("Bot played card:", playedCard.getCurrentSide());
+    } else {
+        console.log("Bot chose to draw card");
+    }
+} catch (error) {
+    console.error("Error in decideCard:", error.message);
+}
+
+// Test bot color choice
+try {
+    const chosenColor = bot.chooseColor();
+    console.log("Bot chose color:", chosenColor);
+} catch (error) {
+    console.error("Error in chooseColor:", error.message);
+}
+
+// Test bot UNO call
+console.log("Should bot call UNO:", bot.shouldCallUno());
+
+// Test bot challenge
+console.log("Bot challenge decision:", bot.decideChallengeAction());
+
+deck.flipDeck();
+field.flipField();
+
+// Test game manager
+console.log("\n13. Testing Game Manager");
+const gameManager = new GameManager();
+const gameAction = new GameAction();
+gameManager.startGame(state, 3);
+console.log("Game started successfully");
+
+console.log("\n=== Tests Completed ===");

@@ -1,14 +1,17 @@
 {
-  "name": "uno-nodejs",
+  "name": "uno-flip-game",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "UNO Flip card game implementation",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
   "dependencies": {
-    "uno-nodejs": "file:"
+    "express": "^4.21.2",
+    "uno-flip-game": "file:"
   }
 }

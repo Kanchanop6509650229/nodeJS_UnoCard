@@ -96,8 +96,12 @@ class Player {
     if (!field || typeof field.getCurrentColor !== 'function') {
       throw new Error('Invalid field provided');
     }
-
+    
     const card = this.hand[cardIndex];
+    // Allow flip card to be played regardless of field state
+    if (card.getValue() === "flip") {
+      return true;
+    }
     if (card.getColor() === "wild") {
       return true;
     }

@@ -85,9 +85,12 @@ class GameManager {
      * @param {GameState} state - Current game state
      * @param {Player} player - Player drawing card
      * @param {number} [count=1] - Number of cards to draw
+     * @returns {UnoCard[]} The drawn cards
      */
     handleDrawCard(state, player, count = 1) {
-        player.drawCard(state.deck.drawCard(count));
+        const drawnCards = state.deck.drawCard(count);
+        player.drawCard(drawnCards);
+        return drawnCards;
     }
 
     /**

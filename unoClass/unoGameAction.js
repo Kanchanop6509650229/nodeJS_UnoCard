@@ -3,9 +3,10 @@ class GameAction {
      * Handles Draw Two card effect
      * @param {GameState} state - Current game state
      * @param {Player} targetPlayer - Player to draw cards
+     * @param {number} numCards - Number of cards to draw
      */
-    handleDrawTwo(state, targetPlayer) {
-        targetPlayer.drawCard(state.deck.drawCard(2));
+    handleDrawTwo(state, targetPlayer, numCards = 2) {
+        targetPlayer.drawCard(state.deck.drawCard(numCards));
         state.setNextPlayer(); // Skip next player's turn
     }
 
@@ -24,9 +25,10 @@ class GameAction {
      * @param {GameState} state - Current game state
      * @param {Player} targetPlayer - Player to draw cards
      * @param {string} chosenColor - Color chosen by player
+     * @param {number} drawCount - Number of cards to draw
      */
-    handleWildDrawFour(state, targetPlayer, chosenColor) {
-        targetPlayer.drawCard(state.deck.drawCard(4));
+    handleWildDrawFour(state, targetPlayer, chosenColor, drawCount = 4) {
+        targetPlayer.drawCard(state.deck.drawCard(drawCount));
         state.field.setWildColor(chosenColor);
         state.setNextPlayer(); // Skip next player's turn
     }

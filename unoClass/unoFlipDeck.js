@@ -4,7 +4,7 @@ class UnoFlipDeck {
   #NORMAL_COLORS = ["red", "yellow", "blue", "green"];
   #FLIP_COLORS = ["pink", "teal", "orange", "purple"];
   #NORMAL_SPECIALS = ["draw1", "reverse", "stop", "wild", "wild_draw2", "flip"];
-  #FLIP_SPECIALS = ["draw5", "skip_everyone", "reverse", "skip", "wild", "wild_draw_color"];
+  #FLIP_SPECIALS = ["draw5", "skip_everyone", "reverse", "skip", "wild", "wild_draw_color", "flip"];
   #SHUFFLE_COUNT = 3;
 
   /**
